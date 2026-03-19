@@ -17,6 +17,92 @@
 			href="style.css" />
 	</head>
 	<body>
+		<header class="header">
+			<h1>Sorting Visualizer</h1>
+			<p>An interactive tool to visualize sorting algorithms</p>
+		</header>
+		<main>
+			<form
+				id="form"
+				class="form">
+				<select
+					name="sorting-algorithm"
+					id="sorting-algorithm">
+					<option value="bubble">Bubble Sort</option>
+					<option value="selection">Selection Sort</option>
+					<option value="insertion">Insertion Sort</option>
+				</select>
+				<label for="array-size"
+					>Array Size:
+					<span
+						id="array-size-num"
+						class="array-size-num"></span
+				></label>
+				<input
+					type="range"
+					id="array-size"
+					name="array-size"
+					min="20"
+					max="100"
+					value="35" />
+				<label for="animation-speed"
+					>Animation Speed:
+					<span
+						id="animation-speed-num"
+						class="animation-speed-num"></span
+				></label>
+				<input
+					type="range"
+					id="animation-speed"
+					name="animation-speed"
+					min="1"
+					max="10"
+					value="5" />
+				<button
+					type="button"
+					id="randomize-array">
+					Randomize Array
+				</button>
+				<button
+					type="submit"
+					id="submit-button">
+					Sort
+				</button>
+			</form>
+			<div
+				id="array-container"
+				class="array-container"></div>
+			<div
+				id="legend"
+				class="legend">
+				<div class="legend-item">
+					<span class="legend-color bar"></span>
+					<p>Unsorted</p>
+				</div>
+				<div class="legend-item">
+					<span class="legend-color bar-comparing"></span>
+					<p>Comparing</p>
+				</div>
+				<div class="legend-item">
+					<span class="legend-color bar-swapping"></span>
+					<p>Swapping</p>
+				</div>
+				<div class="legend-item">
+					<span class="legend-color bar-sorted"></span>
+					<p>Sorted</p>
+				</div>
+			</div>
+		</main>
+		<footer class="footer">
+			<p>
+				Built by Kermo Arusoo ·
+				<a
+					href="https://github.com/KermoArusoo"
+					target="_blank"
+					>GitHub</a
+				>
+			</p>
+		</footer>
 		<script src="script.js"></script>
 	</body>
 </html>
