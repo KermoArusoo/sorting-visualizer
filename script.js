@@ -59,3 +59,34 @@ function renderArray(array) {
 		barElements.push(bar);
 	});
 }
+
+function sleep(ms) {
+	return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function swap(i, j) {
+	// Swap values in the array
+	[array[i], array[j]] = [array[j], array[i]];
+	// Swap heights of the corresponding bars
+	const tempHeight = barElements[i].style.height;
+	barElements[i].style.height = barElements[j].style.height;
+	barElements[j].style.height = tempHeight;
+}
+
+function highlightBars(i, j, className) {
+	barElements[i].classList.add(className);
+	barElements[j].classList.add(className);
+}
+
+function removeHighlight(i, j, className) {
+	barElements[i].classList.remove(className);
+	barElements[j].classList.remove(className);
+}
+
+function markSorted(i) {
+	barElements[i].classList.add("bar-sorted");
+}
+
+function getSpeed() {
+	return 310 - parseInt(speedInput.value) * 30;
+}
