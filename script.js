@@ -19,6 +19,9 @@ window.addEventListener("load", () => {
 	arraySizeValue.textContent = arraySizeInput.value;
 	speedValue.textContent = speedInput.value;
 });
+window.addEventListener("resize", () => {
+	renderArray(array);
+});
 
 form.addEventListener("submit", async (e) => {
 	e.preventDefault();
@@ -111,7 +114,8 @@ function getSpeed() {
 }
 
 function startSort() {
-	submitButton.textContent = "Stop";
+	submitButton.textContent = "Stop and Reset";
+	submitButton.style.backgroundColor = "var(--btn-stop)";
 	randomizeButton.disabled = true;
 	arraySizeInput.disabled = true;
 	algorithmSelect.disabled = true;
@@ -120,6 +124,7 @@ function startSort() {
 
 function stopSort() {
 	submitButton.textContent = "Sort";
+	submitButton.style.backgroundColor = "var(--btn)";
 	randomizeButton.disabled = false;
 	arraySizeInput.disabled = false;
 	algorithmSelect.disabled = false;
@@ -149,6 +154,15 @@ async function bubbleSort() {
 		markSorted(n - 1 - i);
 	}
 	markSorted(0);
+	for (let k = 0; k < n; k++) {
+		barElements[k].classList.remove(
+			"bar-comparing",
+			"bar-swapping",
+			"bar-sorted",
+		);
+		await sleep(50);
+		markSorted(k);
+	}
 	isSorted = true;
 }
 
@@ -181,6 +195,15 @@ async function selectionSort() {
 		markSorted(i);
 	}
 	markSorted(n - 1);
+	for (let k = 0; k < n; k++) {
+		barElements[k].classList.remove(
+			"bar-comparing",
+			"bar-swapping",
+			"bar-sorted",
+		);
+		await sleep(50);
+		markSorted(k);
+	}
 	isSorted = true;
 }
 

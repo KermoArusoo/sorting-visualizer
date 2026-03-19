@@ -52,6 +52,7 @@ select {
 
 	/* UI */
 	--btn: #5c3d22;
+	--btn-stop: #5c2222;
 	--btn-hover: #472e18;
 	--btn-secondary: #cdbfae;
 	--btn-secondary-hover: #bfad98;
@@ -220,13 +221,6 @@ body {
 
 #submit-button:active {
 	transform: scale(0.98);
-}
-
-#submit-button:disabled {
-	background: var(--text-muted);
-	color: var(--surface);
-	cursor: not-allowed;
-	transform: none;
 }
 
 /* ── Bar container ──────────────────────────── */
