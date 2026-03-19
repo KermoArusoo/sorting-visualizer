@@ -20,13 +20,19 @@ window.addEventListener("load", () => {
 	speedValue.textContent = speedInput.value;
 });
 
-form.addEventListener("submit", (e) => {
+form.addEventListener("submit", async (e) => {
 	e.preventDefault();
 	const algorithm = algorithmSelect.value;
 	if (!isSorting) {
+		startSort();
 		if (algorithm === "bubble") {
-			bubbleSort();
+			await bubbleSort();
+		} else if (algorithm === "selection") {
+			await selectionSort();
+		} else if (algorithm === "insertion") {
+			await insertionSort();
 		}
+		stopSort();
 	} else {
 		isSorting = false;
 		return;
@@ -101,7 +107,15 @@ function markSorted(i) {
 }
 
 function getSpeed() {
-	return 110 - parseInt(speedInput.value) * 20;
+	return 105 - parseInt(speedInput.value) * 20;
+}
+
+function startSort() {
+	submitButton.textContent = "Stop";
+	randomizeButton.disabled = true;
+	arraySizeInput.disabled = true;
+	algorithmSelect.disabled = true;
+	isSorting = true;
 }
 
 function stopSort() {
@@ -114,13 +128,9 @@ function stopSort() {
 
 async function bubbleSort() {
 	if (isSorted) return;
-	isSorting = true;
-	submitButton.textContent = "Stop";
-	randomizeButton.disabled = true;
-	arraySizeInput.disabled = true;
-	algorithmSelect.disabled = true;
-	for (let i = 0; i < array.length - 1; i++) {
-		for (let j = 0; j < array.length - i - 1; j++) {
+	let n = array.length;
+	for (let i = 0; i < n - 1; i++) {
+		for (let j = 0; j < n - i - 1; j++) {
 			if (!isSorting) {
 				stopSort();
 				generateArray(parseInt(arraySizeInput.value));
@@ -136,9 +146,69 @@ async function bubbleSort() {
 			await sleep(getSpeed());
 			removeHighlight(j, j + 1, "bar-swapping");
 		}
-		markSorted(array.length - 1 - i);
+		markSorted(n - 1 - i);
 	}
 	markSorted(0);
-	stopSort();
+	isSorted = true;
+}
+
+async function selectionSort() {
+	if (isSorted) return;
+	let n = array.length;
+	let min;
+	for (let i = 0; i < n - 1; ++i) {
+		min = i;
+		for (let j = i + 1; j < n; j++) {
+			if (!isSorting) {
+				stopSort();
+				generateArray(parseInt(arraySizeInput.value));
+				return;
+			}
+			highlightBars(j, min, "bar-comparing");
+			await sleep(getSpeed());
+			removeHighlight(j, min, "bar-comparing");
+			if (array[j] < array[min]) {
+				min = j;
+			}
+		}
+		if (min !== i) {
+			swap(i, min);
+			await sleep(getSpeed() * 2);
+			removeHighlight(i, min, "bar-swapping");
+		} else {
+			removeHighlight(i, min, "bar-comparing");
+		}
+		markSorted(i);
+	}
+	markSorted(n - 1);
+	isSorted = true;
+}
+
+async function insertionSort() {
+	if (isSorted) return;
+	let n = array.length;
+
+	for (let i = 1; i < n; i++) {
+		let key = array[i];
+		let j = i - 1;
+
+		while (j >= 0 && array[j] > key) {
+			if (!isSorting) {
+				stopSort();
+				generateArray(parseInt(arraySizeInput.value));
+				return;
+			}
+			highlightBars(j, j + 1, "bar-comparing");
+			await sleep(getSpeed());
+			swap(j, j + 1);
+			await sleep(getSpeed());
+			removeHighlight(j, j + 1, "bar-swapping");
+			j--;
+		}
+	}
+	for (let k = 0; k < n; k++) {
+		markSorted(k);
+		await sleep(25);
+	}
 	isSorted = true;
 }
