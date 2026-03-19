@@ -1,5 +1,7 @@
 let array = [];
 let barElements = [];
+let isSorted = false;
+let isSorting = false;
 
 // Get DOM elements
 const form = document.getElementById("form");
@@ -21,6 +23,14 @@ window.addEventListener("load", () => {
 form.addEventListener("submit", (e) => {
 	e.preventDefault();
 	const algorithm = algorithmSelect.value;
+	if (!isSorting) {
+		if (algorithm === "bubble") {
+			bubbleSort();
+		}
+	} else {
+		isSorting = false;
+		return;
+	}
 });
 
 randomizeButton.addEventListener("click", () => {
@@ -44,6 +54,7 @@ function generateArray(size) {
 		array[i] =
 			Math.floor(Math.random() * (arrayContainer.clientHeight * 0.95)) + 1;
 	}
+	isSorted = false;
 	return renderArray(array);
 }
 
@@ -65,6 +76,8 @@ function sleep(ms) {
 }
 
 function swap(i, j) {
+	removeHighlight(i, j, "bar-comparing");
+	highlightBars(i, j, "bar-swapping");
 	// Swap values in the array
 	[array[i], array[j]] = [array[j], array[i]];
 	// Swap heights of the corresponding bars
@@ -88,5 +101,44 @@ function markSorted(i) {
 }
 
 function getSpeed() {
-	return 310 - parseInt(speedInput.value) * 30;
+	return 110 - parseInt(speedInput.value) * 20;
+}
+
+function stopSort() {
+	submitButton.textContent = "Sort";
+	randomizeButton.disabled = false;
+	arraySizeInput.disabled = false;
+	algorithmSelect.disabled = false;
+	isSorting = false;
+}
+
+async function bubbleSort() {
+	if (isSorted) return;
+	isSorting = true;
+	submitButton.textContent = "Stop";
+	randomizeButton.disabled = true;
+	arraySizeInput.disabled = true;
+	algorithmSelect.disabled = true;
+	for (let i = 0; i < array.length - 1; i++) {
+		for (let j = 0; j < array.length - i - 1; j++) {
+			if (!isSorting) {
+				stopSort();
+				generateArray(parseInt(arraySizeInput.value));
+				return;
+			}
+			highlightBars(j, j + 1, "bar-comparing");
+			await sleep(getSpeed());
+			if (array[j] > array[j + 1]) {
+				swap(j, j + 1);
+			} else {
+				removeHighlight(j, j + 1, "bar-comparing");
+			}
+			await sleep(getSpeed());
+			removeHighlight(j, j + 1, "bar-swapping");
+		}
+		markSorted(array.length - 1 - i);
+	}
+	markSorted(0);
+	stopSort();
+	isSorted = true;
 }

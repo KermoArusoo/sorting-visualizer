@@ -44,11 +44,11 @@ select {
 	--text: #2c1e10;
 	--text-muted: #6b5a48;
 
-	/* accents */
-	--teal: #3d7f7f;
-	--terracotta: #b8532e;
-	--sage: #4a8f5a;
-	--plum: #7c5a92;
+	/* bar states */
+	--unsorted: #7a8c6e;
+	--comparing: #d4b44a;
+	--swapping: #c45c3e;
+	--sorted: #6b5e40;
 
 	/* UI */
 	--btn: #5c3d22;
@@ -133,7 +133,7 @@ body {
 }
 
 .form select:focus {
-	outline: 2px solid var(--teal);
+	outline: 2px solid var(--unsorted);
 	outline-offset: 1px;
 }
 
@@ -173,7 +173,13 @@ body {
 }
 
 .form input[type="range"]:focus::-webkit-slider-thumb {
-	box-shadow: 0 0 0 3px rgba(74, 140, 140, 0.3);
+	box-shadow: 0 0 0 3px rgba(122, 140, 110, 0.35);
+}
+
+.form select:disabled,
+.form input[type="range"]:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
 }
 
 /* ── Buttons ────────────────────────────────── */
@@ -196,6 +202,13 @@ body {
 	background: var(--btn-secondary-hover);
 }
 
+#randomize-array:disabled {
+	background: var(--border);
+	color: var(--text-muted);
+	cursor: not-allowed;
+	transform: none;
+}
+
 #submit-button {
 	background: var(--btn);
 	color: var(--surface);
@@ -207,6 +220,13 @@ body {
 
 #submit-button:active {
 	transform: scale(0.98);
+}
+
+#submit-button:disabled {
+	background: var(--text-muted);
+	color: var(--surface);
+	cursor: not-allowed;
+	transform: none;
 }
 
 /* ── Bar container ──────────────────────────── */
@@ -223,21 +243,21 @@ body {
 
 /* ── Bars ───────────────────────────────────── */
 .bar {
-	background-color: var(--teal);
+	background-color: var(--unsorted);
 	border-radius: 2px 2px 0 0;
 	transition: background-color 0.1s ease;
 }
 
 .bar-comparing {
-	background-color: var(--terracotta);
+	background-color: var(--comparing);
 }
 
 .bar-swapping {
-	background-color: var(--sage);
+	background-color: var(--swapping);
 }
 
 .bar-sorted {
-	background-color: var(--plum);
+	background-color: var(--sorted);
 }
 
 /* ── Legend ──────────────────────────────────── */
