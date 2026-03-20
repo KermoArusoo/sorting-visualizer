@@ -3,6 +3,7 @@ let barElements = [];
 let isSorted = false;
 let isSorting = false;
 let audioContext = new (window.AudioContext || window.webkitAudioContext)();
+let timerInterval;
 
 // Get DOM elements
 const form = document.getElementById("form");
@@ -13,12 +14,14 @@ const speedInput = document.getElementById("animation-speed");
 const speedValue = document.getElementById("animation-speed-num");
 const randomizeButton = document.getElementById("randomize-array");
 const submitButton = document.getElementById("submit-button");
+const timer = document.getElementById("timer");
 const arrayContainer = document.getElementById("array-container");
 
 window.addEventListener("load", () => {
 	generateArray(parseInt(arraySizeInput.value));
 	arraySizeValue.textContent = arraySizeInput.value;
 	speedValue.textContent = speedInput.value;
+	resetTimer();
 });
 window.addEventListener("resize", () => {
 	renderArray(array);
@@ -27,7 +30,7 @@ window.addEventListener("resize", () => {
 form.addEventListener("submit", async (e) => {
 	e.preventDefault();
 	const algorithm = algorithmSelect.value;
-	if (!isSorting) {
+	if (!isSorted && !isSorting) {
 		startSort();
 		if (algorithm === "bubble") {
 			await bubbleSort();
@@ -38,6 +41,7 @@ form.addEventListener("submit", async (e) => {
 		}
 		stopSort();
 	} else {
+		resetTimer();
 		isSorting = false;
 		return;
 	}
@@ -45,12 +49,14 @@ form.addEventListener("submit", async (e) => {
 
 randomizeButton.addEventListener("click", () => {
 	const size = parseInt(arraySizeInput.value);
+	resetTimer();
 	generateArray(size);
 });
 
 arraySizeInput.addEventListener("input", () => {
 	const size = parseInt(arraySizeInput.value);
 	arraySizeValue.textContent = size;
+	resetTimer();
 	generateArray(size);
 });
 
@@ -129,7 +135,27 @@ function playTone(value) {
 	oscillator.stop(audioContext.currentTime + 0.05);
 }
 
+function formatTime(elapsed) {
+	const minutes = Math.floor(elapsed / 60000);
+	const seconds = Math.floor((elapsed % 60000) / 1000);
+	const centiseconds = Math.floor((elapsed % 1000) / 10);
+	if (minutes > 0) {
+		return `${minutes}:${seconds.toString().padStart(2, "0")}.${centiseconds.toString().padStart(2, "0")}m`;
+	}
+	return `${seconds.toString().padStart(2, "0")}.${centiseconds.toString().padStart(2, "0")}s`;
+}
+
+function resetTimer() {
+	clearInterval(timerInterval);
+	timer.textContent = formatTime(0);
+}
+
 function startSort() {
+	resetTimer();
+	const startTime = Date.now();
+	timerInterval = setInterval(() => {
+		timer.textContent = formatTime(Date.now() - startTime);
+	}, 10);
 	audioContext.resume();
 	submitButton.textContent = "Stop and Reset";
 	submitButton.style.backgroundColor = "var(--btn-stop)";
@@ -172,6 +198,7 @@ async function bubbleSort() {
 		markSorted(n - 1 - i);
 	}
 	markSorted(0);
+	clearInterval(timerInterval);
 	for (let k = 0; k < n; k++) {
 		barElements[k].classList.remove(
 			"bar-comparing",
@@ -215,6 +242,7 @@ async function selectionSort() {
 		markSorted(i);
 	}
 	markSorted(n - 1);
+	clearInterval(timerInterval);
 	for (let k = 0; k < n; k++) {
 		barElements[k].classList.remove(
 			"bar-comparing",
@@ -251,6 +279,7 @@ async function insertionSort() {
 			j--;
 		}
 	}
+	clearInterval(timerInterval);
 	for (let k = 0; k < n; k++) {
 		markSorted(k);
 		playTone(200 + (array[k] / arrayContainer.clientHeight) * 850);

@@ -9,11 +9,13 @@ Built as a hobby project to explore algorithm visualization, async JavaScript, a
 ## Features
 
 - **Three sorting algorithms** — Bubble Sort, Selection Sort, and Insertion Sort, each with distinct visual patterns
+- **Sorting timer** - see how long it took for the array to be sorted
 - **Adjustable speed** — control animation speed in real time, even mid-sort
 - **Adjustable array size** — generate arrays from 20 to 100 elements
 - **Color-coded steps** — green (unsorted), yellow (comparing), red-orange (swapping), dark olive (sorted/final position)
 - **Stop & reset** — stop any sort mid-run and start fresh
 - **Responsive layout** — works on desktop, tablet, and mobile
+- **Sound feedback** - each comparison plays a tone mapped to bar height, creating an audible sweep as the array sorts
 
 ## How It Works
 
@@ -44,7 +46,6 @@ Some things I might add down the line:
 - More algorithms (Merge Sort, Quick Sort, Heap Sort)
 - A step counter and comparison counter to show algorithm efficiency
 - Side-by-side mode to race two algorithms against each other
-- Sound effects tied to bar heights (lower bars = lower pitch)
 - A "step through" mode where you click to advance one step at a time
 
 ## Contributing
