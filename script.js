@@ -2,6 +2,7 @@ let array = [];
 let barElements = [];
 let isSorted = false;
 let isSorting = false;
+let audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
 // Get DOM elements
 const form = document.getElementById("form");
@@ -113,7 +114,23 @@ function getSpeed() {
 	return 105 - parseInt(speedInput.value) * 20;
 }
 
+function playTone(value) {
+	const oscillator = audioContext.createOscillator();
+	const gainNode = audioContext.createGain();
+
+	oscillator.connect(gainNode);
+	gainNode.connect(audioContext.destination);
+
+	oscillator.type = "sine";
+	oscillator.frequency.value = value;
+	gainNode.gain.value = 0.1;
+
+	oscillator.start();
+	oscillator.stop(audioContext.currentTime + 0.05);
+}
+
 function startSort() {
+	audioContext.resume();
 	submitButton.textContent = "Stop and Reset";
 	submitButton.style.backgroundColor = "var(--btn-stop)";
 	randomizeButton.disabled = true;
@@ -142,6 +159,7 @@ async function bubbleSort() {
 				return;
 			}
 			highlightBars(j, j + 1, "bar-comparing");
+			playTone(200 + (array[j] / arrayContainer.clientHeight) * 850);
 			await sleep(getSpeed());
 			if (array[j] > array[j + 1]) {
 				swap(j, j + 1);
@@ -160,6 +178,7 @@ async function bubbleSort() {
 			"bar-swapping",
 			"bar-sorted",
 		);
+		playTone(200 + (array[k] / arrayContainer.clientHeight) * 850);
 		await sleep(50);
 		markSorted(k);
 	}
@@ -179,6 +198,7 @@ async function selectionSort() {
 				return;
 			}
 			highlightBars(j, min, "bar-comparing");
+			playTone(200 + (array[j] / arrayContainer.clientHeight) * 850);
 			await sleep(getSpeed());
 			removeHighlight(j, min, "bar-comparing");
 			if (array[j] < array[min]) {
@@ -201,6 +221,7 @@ async function selectionSort() {
 			"bar-swapping",
 			"bar-sorted",
 		);
+		playTone(200 + (array[k] / arrayContainer.clientHeight) * 850);
 		await sleep(50);
 		markSorted(k);
 	}
@@ -222,6 +243,7 @@ async function insertionSort() {
 				return;
 			}
 			highlightBars(j, j + 1, "bar-comparing");
+			playTone(200 + (array[j] / arrayContainer.clientHeight) * 850);
 			await sleep(getSpeed());
 			swap(j, j + 1);
 			await sleep(getSpeed());
@@ -231,6 +253,7 @@ async function insertionSort() {
 	}
 	for (let k = 0; k < n; k++) {
 		markSorted(k);
+		playTone(200 + (array[k] / arrayContainer.clientHeight) * 850);
 		await sleep(25);
 	}
 	isSorted = true;
